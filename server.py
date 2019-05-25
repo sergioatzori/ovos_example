@@ -47,7 +47,7 @@ class MessageHandler(threading.Thread):
         found = []
         for customer in res:
             id, name, notification_label = customer
-            if notification_label.lower() in msg.lower():
+            if notification_label.casefold() in msg.casefold():
                 logging.info("Found customer %s (id: %d) for this message", name, id)
                 found.append(id)
         if len(found) == 1:
