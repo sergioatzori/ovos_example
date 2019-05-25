@@ -4,7 +4,6 @@ import threading
 import sys
 import sqlite3
 from vars import db_name
-import re
 from datetime import date
 
 
@@ -50,7 +49,7 @@ class MessageHandler(threading.Thread):
         found = []
         for customer in res:
             id, name, notification_label = customer
-            if re.search(notification_label.lower(), msg.lower()):
+            if notification_label.lower() in msg.lower():
                 logging.info("Found customer %s (id: %d) for this message", name, id)
                 found.append(id)
         if len(found) == 1:

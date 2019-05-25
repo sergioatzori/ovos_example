@@ -1,2 +1,5 @@
 data.sqlite
 data.log
+venv
+__pycache__
+.idea
