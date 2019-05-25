@@ -18,7 +18,7 @@ class MessageHandler(threading.Thread):
 
     def run(self):
         msg = self.get_client_msg()
-        logging.debug('Client: %r sent %d bytes.', self.address, len(msg))
+        logging.debug('Client: %r sent %d chars.', self.address, len(msg))
         customer_id = self.find_customer(msg)
         # Check if multiple customers belong to this message
         if customer_id == 'multiple':
@@ -30,13 +30,14 @@ class MessageHandler(threading.Thread):
         self.sockfd.close()
 
     def get_client_msg(self):
-        data = ''
+        data = b''
         while True:
+            buffer = self.sockfd.recv(self.BUFFER_SIZE)
+            data += buffer
             try:
-                buffer = self.sockfd.recv(self.BUFFER_SIZE).decode()
-                data += buffer
-                if not(buffer) or len(data) >= self.MAX_MSG_SIZE:
-                    return data[:300]
+                string = data.decode()
+                if not(buffer) or len(string) >= self.MAX_MSG_SIZE:
+                    return string[:300]
             except UnicodeDecodeError:
                 logging.error("Failed to decode message buffer")
 
