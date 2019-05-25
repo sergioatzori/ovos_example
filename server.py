@@ -34,12 +34,9 @@ class MessageHandler(threading.Thread):
         while True:
             buffer = self.sockfd.recv(self.BUFFER_SIZE)
             data += buffer
-            try:
-                string = data.decode()
-                if not(buffer) or len(string) >= self.MAX_MSG_SIZE:
-                    return string[:300]
-            except UnicodeDecodeError:
-                logging.error("Failed to decode message buffer")
+            string = data.decode(errors='replace')
+            if not(buffer) or len(string) >= self.MAX_MSG_SIZE:
+                return string[:300]
 
     def find_customer(self, msg):
         conn = sqlite3.connect(db_name)
